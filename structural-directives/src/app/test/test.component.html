@@ -1,0 +1,318 @@
+<h2>12 - ngIf Directive</h2>
+<h3>Structual Directives</h3>
+Add or remove HTML elements <br>
+<ul>  
+  <li>ngIf</li>
+  <li>ngSwitch</li>
+  <li>ngFor</li>
+</ul>
+<h3> ngIF</h3>
+<h4 *ngIf="displayName; else elseBlock1"> EduardoJmz</h4>
+<ng-template #elseBlock1> 
+  <h4>
+    Name is hidden
+  </h4>
+</ng-template>
+
+<div *ngIf="displayName; then thenBlock; else elseBlock"></div>
+<ng-template #thenBlock>
+  Eduardo Jmz <br>
+</ng-template>
+<ng-template #elseBlock>
+  Hidden <br>
+</ng-template>
+
+<h3>ngSwitch</h3>
+<div [ngSwitch]="color">
+  <div *ngSwitchCase=" 'red' ">You picked red color</div>
+  <div *ngSwitchCase=" 'blue' ">You picked blue color</div>
+  <div *ngSwitchCase=" 'green' ">You picked green color</div>
+</div> 
+
+<h3>ngFor</h3>
+<div *ngFor="let color of colors;index as i">
+  {{i}} {{color}}
+</div>
+<b>Note: </b>
+You can use index, last, first, odd & even <br>
+
+<h2>15 - Component Interaction</h2>
+<h3>Paretn - AppComponent</h3>
+<h3>Child TestComponent</h3>
+<br>  
+<h3>Parent to Child</h3>
+<li>Crea la variable name en las clase AppComponent y agrea el siguiente atributo al tag app-test</li>
+<br>
+<code> {{'<'}}app-test [parentData]="name"{{'>'}} <br></code> <br>
+<li>Importa el Imput en test.component.ts y crea la variable parentData </li> <br>
+<code>import  {{'{'}} Component, OnInit,Input  {{'}'}} from '@angular/core'; <br></code>
+<h4>{{"Hello "+ parentData}}</h4>
+<h4>{{"Hola "+ nombre}}</h4>
+
+<h3>Child to Parent</h3>
+<li>Importa Output y EventEmitter en test.component.ts y crea la variable childEvent</li><br>
+<code>@Output() public childEvent = new EventEmitter();<br></code><br>
+<li>Crea un boton que dispare la funcion fireEvent()</li><br>
+<button (click)="fireEvent()">Send Event (Message on Top)</button><br>
+<li>Agrega el atributo (childEvent)="message=$event" al tag app-test y crea la variable message en app.components.ts </li>
+
+<h2>16 - Pipes</h2>
+<h4>{{name}}</h4>
+Uppercase<h4>{{name | uppercase}}</h4>
+Lowercase<h4>{{name | lowercase}}</h4>
+Titlecase<h4>{{message | titlecase}}</h4>
+Slice 3 to 6 ({{name}}) <h4>{{name | slice:3:6}}</h4>
+Json<h4>{{ person | json }}</h4>
+<h4>{{5.678 | number: '1.2-3' }}</h4>
+<h4>{{5.678 | number: '3.4-5' }}</h4>
+<h4>{{5.678 | number: '3.1-2' }}</h4>
+<h4>{{ 0.25 | percent }}</h4>
+<h4>{{ 0.25 | currency }}</h4>
+<h4>{{ 0.25 | currency: 'EUR' : 'code' }} </h4>
+<h4>{{date | date:'short'}}</h4>
+<h4>{{date | date:'shortDate'}}</h4>
+<h4>{{date | date:'shortTime'}}</h4>
+
+<h2>17 - Services</h2>
+<h3>DRY - Do Not Repeat Yourself</h3>
+<h3>Single Responsibility Principle</h3>
+<h3>A class with a specific purpose</h3>
+<ol>
+  <li> Share date</li>
+  <li> Implement application logic</li>
+  <li> External Interaction</li>
+</ol>
+<h3>Naming conventio - .service.ts</h3>
+
+<h2>18 - Dependency Injection</h2>
+
+<ul>
+  <li>Code without DI -drawbacks</li>
+  <pre><code>
+  class Engine{{'{'}} 
+    constructor(){{'{'}}{{'}'}}
+  {{'}'}} <br>
+  class Tires{{'{'}}
+    contructor(){{'{'}}{{'}'}} 
+  {{'}'}} <br> 
+  class Car{{'{'}}
+    engine;
+    tires;
+    constructor(){{'{'}}
+      this.engine = new Engine();
+      this.tires = new Tires();
+    {{'}'}}
+  {{'}'}}    
+  </code></pre>
+  Este codigo no es plexible ya que cada que cambien las clases Engine o Tires para agregar algun <br>
+  paramatro, la clase Car tambien debe de ser modificada
+  <li>DI as a design pattern</li>
+  <p>DI is a coding patter in which a class receives its dependencies from external source rather than creating then itself</p>
+  <code> <pre>
+  class Car{{'{'}}
+    engine;
+    tires;
+    constructor(engine,tires){{'{'}}
+      this.engine = engine;
+      this.tires = tires;
+    {{'}'}}
+  {{'}'}}   <br>  
+  var myEngine= new Engine(parameter);
+  var myTires= new Tires(parameter);
+  var myCar = new Car(myEngine, myTires);
+  </pre></code>
+  <li>DI as a framework</li>
+  <ol>
+    <li>Define the EmployeeService class</li>
+    <li>Register with Injector</li>
+    <li>Declare as dependency in EmpList and EmpDetail</li>
+  </ol>
+</ul>
+
+<h2>19 - Using a Service</h2>
+<h4>1.Define the EmployeeService class</h4>
+Genera nuevo servicio  <br>
+>ng g s "service_name"
+<h4>2.Register with Injector</h4>
+
+<h5>Hierarchical DI in Angular</h5>
+<ol>
+  <li>AppModule</li>
+  <li>AppComponent</li>
+  <li>EmpList / EmpDetail</li>
+</ol>
+Into app.module.ts
+<code>
+<pre>
+import {{'{'}}EmployeeService{{'}'}} from './employee.service';
+@NgModule({{'{'}}
+  providers: [EmployeeService],
+{{'}'}})
+</pre>
+</code>
+<h4>3.Declare as dependency in EmpList and EmpDetail</h4>
+Into employee-list.component.ts & employee-detail.component.ts
+<pre>
+  <code>
+    import {{'{'}}EmployeeService{{'}'}} from '../employee.service';
+    constructor(private _employeeService: EmployeeService ) {{'{'}} {{'}'}}
+
+    ngOnInit() {{'{'}}
+      this.employees = this. _employeeService.getEmployees();
+    {{'}'}}
+  </code>
+</pre>
+<app-employee-list> </app-employee-list>
+<app-employee-detail> </app-employee-detail>
+
+<h2>20 - HTTP and Observables</h2>
+<h3>Observables</h3>
+A sequence of items that arrive asynchronously over time. <br>
+HTTP call - single items <br>
+Single item - HTTP response <br>  
+
+<h3>HTTP, Observables and RxJS</h3>
+<ol> 
+  <li>HTTP Get request from EmpService</li>
+  <li>Receive the observable and cast it into an employee array</li>
+  <li>Subsribe to the observable from EmpList and EmpDetail</li>
+  <li>Assign the employee array to a local variable</li>
+</ol>
+
+<h4>RxJs</h4>
+- Reactive Extensions for Javascript <br>
+- Exterbal library to work with Observables <br>
+
+<h2>21 - Fetch Data Using HTTP</h2>
+<h3>HTTP Get request from EmpService</h3>
+into app.module.ts <br>
+<code><pre>
+import {{'{'}} HttpClientModule {{'}'}} from '@angular/common/http';
+@NgModule({{'{'}}
+  imports: [
+    BrowserModule,
+    // import HttpClientModule after BrowserModule.
+    HttpClientModule,
+  ]
+{{'}'}})
+</pre></code>
+Into employee.service.ts
+<code><pre>
+import {{'{'}}HttpClient{{'}'}} from '@angular/common/http'; 
+export class EmployeeService {{'{'}}
+  private _url:string= "/assets/data/employees.json";
+  constructor() {{'{'}} private http: HttpClient {{'}'}}
+  getEmployees(){{'{'}}
+    return this.http.get(this._url);
+  {{'}'}}
+{{'}'}}
+ </pre></code>
+ <h3>Receive the observable and cast it into an employee array</h3>
+ -Crear una interface IEmployee para el cast (app/employee.ts) <br>
+ -Into employee.service.ts <br>
+<code><pre>
+import {{'{'}} IEmployee {{'}'}} from './employee';
+import {{'{'}} Observable{{'}'}} from 'rxjs';
+
+  getEmployees():Observable{{'<'}}IEmployee[]{{'>'}}{{'{'}}
+     return this.http.get{{'<'}}IEmployee[]{{'>'}}(this._url);
+  {{'}'}}
+</pre></code>
+
+<h3>Subsribe to the observable from EmpList and EmpDetail & Assign the employee array to a local variable</h3>
+-Into employee-list-component.ts & employee-detail.component.ts
+<code><pre>
+ ngOnInit() {{'{'}}
+    this. _employeeService.getEmployees()
+      .subscribe(data=>this.employees=data);
+  {{'}'}}
+</pre></code>
+<h3>Empresas List</h3>
+<ul *ngFor="let empresa of empresas" class="list-group">
+  <li class="list-group-item">{{empresa.id_empresa}}-{{empresa.razon_social}}-{{empresa.rfc}}</li>
+</ul>
+
+<h2>22 - HTTP Error Handling</h2>
+- Into employee.service.ts
+<code><pre>
+  import {{'{'}} catchError {{'}'}} from 'rxjs/operators';
+  import {{'{'}} HttpErrorResponse {{'}'}} from '@angular/common/http';
+  import {{'{'}} throwError as observableThrowError, Observable {{'}'}} from 'rxjs';
+
+  getEmpresas():Observable{{'<'}}IEmpresa[]{{'>'}}{{'{'}}
+    return this.http.get{{'<'}}IEmpresa[]{{'>'}}(this._url2).pipe( 
+      catchError(this.errorHandler));
+  {{'}'}}
+
+  errorHandler(error: HttpErrorResponse){{'{'}}
+    return observableThrowError(error.message || "Server Error");
+  {{'}'}}
+  </pre></code>
+
+  -Into employee-list.componentts
+<code><pre> 
+  public errorMsg;
+  constructor(private _employeeService: EmployeeService ) {{'{'}}{{'}'}}
+
+  ngOnInit() {{'{'}}
+    this. _employeeService.getEmployees()
+      .subscribe(data => this.employees = data,
+                            error => this.errorMsg = error);
+  {{'}'}}
+</pre></code>
+
+<h2>Routing in Angular</h2>
+<h3>Routing App</h3>
+<ol>
+  <li>Generate a project with routing option</li>
+  > ng new "routing-demo" --routing <br>
+  >index.html {{'<'}} base href="/"{{'>'}} <br>
+  >app-routing.module.ts <br>
+  >into app.module.ts
+  <code> <pre>
+    import {{'{'}} AppRoutingModule {{'}'}} from './app-routing.module'; 
+    @NgModule({{'{'}}
+      imports: [
+        BrowserModule,
+        AppRoutingModule
+      ],
+    {{'}'}})
+  </pre></code>
+
+  <li>Generate departamentLiist and employeeList components</li>
+  >ng g c department-list -it -is <br>
+  >ng g c employee-list -it -is <br>
+  -it (inline template) -is (inline style) <br>
+
+  <li>Configura the routes</li>
+  >En app-routing.module.ts importar los componentes como en app.module.ts
+  >Configurar path , componentes y exportar
+    <code><pre>
+  import {{'{'}} DepartmentListComponent {{'}'}} from './department-list/department-list.component';
+  import {{'{'}} EmployeeListComponent {{'}'}} from './employee-list/employee-list.component';
+
+  const routes: Routes = [
+    {{'{'}} path:'departments', component : DepartmentListComponent {{'}'}},
+    {{'{'}}path:'employees', component : EmployeeListComponent{{'{'}}
+  ];
+  export const routingComponents = [DepartmentListComponent, EmployeeListComponent];
+</pre></code>
+  > En app.module.ts importar routingComponents, eliminar importacion de componentes y configurar el NgModule
+  <code><pre>
+    import {{'{'}} AppRoutingModule, routingComponents {{'}'}} from './app-routing.module';
+    @NgModule({{'{'}}
+      declarations: [
+        AppComponent,
+        routingComponents
+      ],
+    {{'}'}})
+  </pre></code>
+  <li>Add buttons and use directives to navigate</li>
+  <code><pre>
+  {{'<'}}nav{{'>'}}
+    {{'<'}}a routerLink="/departments" routerLinkActive="active"{{'<'}}Departments{{'<'}}/a{{'>'}}
+    {{'<'}}a routerLink="/employees" routerLinkActive="active"{{'>'}}Employees{{'<'}}/a{{'<'}}
+  {{'<'}}/nav{{'>'}}
+  </pre></code>
+</ol>
+

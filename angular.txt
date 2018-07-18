@@ -1,0 +1,74 @@
+Instalar Angular CLI 
+
+    Tutorial    -    https://www.youtube.com/watch?v=0eWrpsCLMJQ&list=PLC3y8-rFHvwhBRAgFinJR8KHIrCdTkZcZ
+
+    >npm install -g @angular/cli
+
+    >ng new my_app
+    >cd my_app
+    >ng serve
+
+Modules
+    User / Admin
+    Root Module / AppModule
+    -Components
+    -Services
+
+Architecture Summary
+    Angular app - one or more Modules
+    Module - One or more components and services
+    Component - HTML + Class
+    Services - Business login
+    Modules interact and ultimately render the view in the browser
+
+Cuando se inicia la aplicacion ng serve (npm start) esta sigue la secuencia:
+->src
+    main.ts     -   It´s the entry point to angular application
+    app.module.ts   -   It´s the root module of application
+    app.components.ts   -   It´s the root component of our application
+
+4   -   Components
+    Template 
+        View -  HTML
+    Class
+        Code    -   TypeScript  -   Data & Methods
+
+        export class AppComponent {
+            title = 'Evolution Code';
+        }
+
+    Metadata
+        Information  
+        Decorator
+            @Component({
+                 selector: 'app-root',
+                templateUrl: './app.component.html',
+                styleUrls: ['./app.component.css']
+            })
+
+    -Generar nuevo componente 
+        >ng g c "component_name"
+
+        Esto genera una carptea "component_name" en la carpeta app con los archivos .ts , .css y .html
+        , ademas inporta el componente en el app.module.ts
+
+        Para agegar la nueva vista se agerga el selector del nuevo Decorator ("app-test") dentro del app-root
+            <app-test></app-test>
+
+        Otra forma de agregar la vista es cambiando el selector del Componente a una clase
+        
+        @Component({
+            selector: '.app-test',
+        })
+        
+         <div class="app-test"></div>
+
+        Por ultimo podemos agregar la vista como un atributo 
+
+        @Component({
+            selector: '[app-test]',
+        })
+
+        y agregandolo a la vista como una clase
+            <div app-test>
+

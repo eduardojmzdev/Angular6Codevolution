@@ -1,0 +1,275 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Routing and Navigation
+  </h1> 
+</div>
+<nav> 
+  <a routerLink="/departments" routerLinkActive="active">Departments</a><br>  
+  <a routerLink="/employees" routerLinkActive="active">Employees</a>
+</nav>
+<router-outlet></router-outlet>
+<h2>Routing in Angular</h2>
+<h3>Routing App</h3>
+<ol>
+  <li>Generate a project with routing option</li>
+  > ng new "routing-demo" --routing <br>
+  >index.html {{'<'}} base href="/"{{'>'}} <br>
+  >app-routing.module.ts <br>
+  >into app.module.ts
+  <code> <pre>
+    import {{'{'}} AppRoutingModule {{'}'}} from './app-routing.module'; 
+    @NgModule({{'{'}}
+      imports: [
+        BrowserModule,
+        AppRoutingModule
+      ],
+    {{'}'}})
+  </pre></code>
+
+  <li>Generate departamentLiist and employeeList components</li>
+  >ng g c department-list -it -is <br>
+  >ng g c employee-list -it -is <br>
+  -it (inline template) -is (inline style) <br>
+
+  <li>Configura the routes</li>
+  >En app-routing.module.ts importar los componentes como en app.module.ts
+  >Configurar path , componentes y exportar
+    <code><pre>
+  import {{'{'}} DepartmentListComponent {{'}'}} from './department-list/department-list.component';
+  import {{'{'}} EmployeeListComponent {{'}'}} from './employee-list/employee-list.component';
+
+  const routes: Routes = [
+    {{'{'}} path:'departments', component : DepartmentListComponent {{'}'}},
+    {{'{'}}path:'employees', component : EmployeeListComponent{{'{'}}
+  ];
+  export const routingComponents = [DepartmentListComponent, EmployeeListComponent];
+</pre></code>
+  > En app.module.ts importar routingComponents, eliminar importacion de componentes y configurar el NgModule
+  <code><pre>
+    import {{'{'}} AppRoutingModule, routingComponents {{'}'}} from './app-routing.module';
+    @NgModule({{'{'}}
+      declarations: [
+        AppComponent,
+        routingComponents
+      ],
+    {{'}'}})
+  </pre></code>
+  <li>Add buttons and use directives to navigate</li>
+  <code><pre>
+  {{'<'}}nav{{'>'}}
+    {{'<'}}a routerLink="/departments" routerLinkActive="active"{{'<'}}Departments{{'<'}}/a{{'>'}}
+    {{'<'}}a routerLink="/employees" routerLinkActive="active"{{'>'}}Employees{{'<'}}/a{{'<'}}
+  {{'<'}}/nav{{'>'}}
+  </pre></code>
+</ol>
+
+<h2>24 - Wildcard Route and Redirecting Routes</h2>
+    Create Page Not Found component <br>
+    >ng g c page-not-fount -it -is
+
+    Add path to app-routing.modules.ts
+    <code><pre>
+    import {{'{'}} PageNotFoundComponent {{'}'}} from './page-not-found/page-not-found.component';
+
+    const routes: Routes = [
+      {{'{'}}path:'',redirectTo:'/departments', pathMatch :'full'{{'}'}},
+      {{'{'}}path:'**', component: PageNotFoundComponent{{'}'}}
+    ];
+
+    export const routingComponents = [PageNotFoundComponent];
+    </pre></code>
+
+<h2>25 - Route Parameters</h2>
+<h4> Department List</h4>
+<ol>
+  <li>Angular</li>
+  <li>Node</li>
+  <li>MongoDB</li>
+  <li>Ruby</li>
+  <li>Bootstrap</li>
+</ol>
+
+<h4>Department Detail</h4>
+You selected department with id= ?
+
+-Crear department-detail <br>
+    >ng g c department-detail -it -is <br>
+-Into app-routing.modules.ts
+
+<code><pre>
+  import {{'{'}} DepartmentDetailComponent {{'}'}} from './department-detail/department-detail.component';
+
+  const routes: Routes = [
+    {{'{'}}path:'departments/:id', component : DepartmentDetailComponent{{'}'}},
+  ];
+  export const routingComponents = [DepartmentDetailComponent];
+</pre></code>
+
+-Into department-list.components.ts (Envio de Parametros)
+<code><pre>
+  import {{'{'}} Router{{'}'}} from '@angular/router';
+ 
+  {{'<'}}h3{{'>'}}Department List {{'<'}}/h3{{'>'}}
+  {{'<'}}ul class="items"{{'>'}}
+    {{'<'}}li (click)="onSelect(department)" *ngFor="let department of departments"{{'>'}}
+      {{'<'}}span class="badge"{{'>'}}
+        {{'{'}}{{'{'}}department.id{{'}'}}{{'}'}}
+      {{'<'}}/span{{'>'}}
+      {{'{'}}{{'{'}}department.name{{'}'}}{{'}'}}
+    {{'<'}}/li{{'>'}}
+  {{'<'}}/ul{{'>'}} 
+
+constructor(private router: Router) {{'{'}}{{'}'}}
+onSelect(department){{'{'}}
+    this.router.navigate(['/departments', department.id ]);
+  {{'}'}}
+    </pre></code>
+-Into department-detail.component.ts (Lectura de Parametros)
+
+<code><pre>
+  import {{'{'}} ActivatedRoute {{'}'}} from '@angular/router';
+  public departmentId;
+  constructor(private route: ActivatedRoute) {{'{'}}{{'}'}}
+
+  ngOnInit() {{'{'}}
+    let id = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.departmentId = id;
+  {{'}'}}
+</pre></code>
+
+<h2>26 ParamMap Observable</h2>
+    >Into department-detail.component.ts
+  <code><pre>
+    import {{'{'}} ActivatedRoute, Router, ParamMap {{'}'}} from '@angular/router';
+
+@Component( {{'{'}}
+  selector: 'app-department-detail',
+  template: `{{'<'}}h4{{'>'}}You selected department with id = {{'{'}} {{'{'}}departmentId{{'}'}} {{'}'}} {{'{'}}/h4 {{'}'}}
+  {{'<'}} a class="btn" (click)="goPrev()" {{'>'}}Prev{{'<'}}/a{{'>'}}
+  {{'<'}}a class="btn" (click)="goNext()" {{'>'}}Next{{'<'}}/a{{'>'}}`,
+  styles: []
+{{'}'}})
+export class DepartmentDetailComponent implements OnInit {{'{'}}
+  public departmentId;
+  constructor(private route: ActivatedRoute, private router: Router) {{'{'}} {{'}'}}
+
+  ngOnInit() {{'{'}}
+    this.route.paramMap.subscribe((params: ParamMap)=>{{'{'}}
+      let id = parseInt(params.get('id'));
+      this.departmentId= id;
+    {{'}'}});
+  {{'}'}}
+
+goPrev(){{'{'}}
+    let prevId = this.departmentId - 1;
+    this.router.navigate(['/departments', prevId ]);
+  {{'}'}}
+  
+  goNext(){{'{'}}
+    let nextId = this.departmentId + 1;
+    this.router.navigate(['/departments',nextId]);
+  {{'}'}}
+
+  </pre></code>
+
+<h2>27 Optional Route Parameters</h2>
+-into department-detail.component.ts
+<code><pre>
+@Component( {{'{'}}
+template:'{{'<'}} div {{'>'}} {{'<'}}button (click)="gotoDepartments()" {{'>'}} Back{{'<'}}/button{{'>'}} {{'<'}}/div{{'>'}}',
+{{'}'}})
+
+gotoDepartments(){{'{'}}
+    let selectedId = this.departmentId ? this.departmentId : null;
+    this.router.navigate(['/departments',{{'{'}} id:selectedId{{'}'}}]);
+{{'}'}}
+</pre></code>
+- Into department-list.component <br> 
+-Import ActivatedRoute and ParamMap
+<code><pre>
+  @Component({{'{'}}
+  selector: 'app-department-list',
+  template: `
+    {{'<'}}h3{{'>'}}Department List {{'<'}}/h3{{'>'}}
+    {{'<'}}ul class="items"{{'>'}}
+      {{'<'}}li (click)="onSelect(department)" [class.selected]="isSelected(department)" *ngFor="let department of departments"{{'}'}}
+        {{'<'}}span class="badge"{{'>'}}
+          {{'{'}}{{'{'}}department.id{{'}'}}{{'}'}}
+        {{'<'}}/span{{'>'}}
+        {{'{'}}{{'{'}}department.name{{'}'}}{{'}'}}
+      {{'<'}}/li{{'>'}}
+    {{'<'}}/ul{{'>'}} 
+  `,
+  styles: []
+{{'}'}})
+  ngOnInit() {{'{'}}
+    this.route.paramMap.subscribe((params: ParamMap)=>{{'{'}}
+      let id = parseInt(params.get('id'));
+      this.selectedId= id;
+    {{'}'}});
+  {{'}'}}
+
+  isSelected(department){{'{'}}
+    return department.id === this.selectedId;
+  {{'}'}}
+</pre></code>
+
+<h2>28 Relative Navigation </h2>
+>Into department-list.component.ts
+<code><pre>
+  onSelect(department){{'{'}}
+    // this.router.navigate(['/departments', department.id ]);
+    this.router.navigate([department.id],{{'{'}}relativeTo: this.route{{'}'}});
+  {{'}'}}
+</pre></code>
+>Into department-detail.component.ts
+<code><pre>
+  gotoDepartments(){{'{'}}
+    let selectedId = this.departmentId ? this.departmentId : null;
+    // this.router.navigate(['/departments',{{'{'}}id:selectedId{{'}'}}]);
+    this.router.navigate(['../',{{'{'}}id:selectedId{{'}'}}],{{'{'}}relativeTo:this.route{{'}'}});
+  {{'}'}}
+</pre></code>
+
+<h2>29 Child Routes</h2>
+>Create components <br>
+>ng g c department-overview -it -is <br>
+>ng g c department-contact -it -is <br>
+
+>Into app-routing.modules.ts <br>
+Import DepartmentDetailComponent, DepartmentOverviewComponent, DepartmentContactComponent <br>
+
+<code><pre>
+const routes: Routes = [
+  {{'{'}}
+    path:'departments/:id', 
+    component : DepartmentDetailComponent,
+    children:[
+      {{'{'}}path:'overview', component : DepartmentOverviewComponent{{'}'}},
+      {{'{'}}path:'contact', component: DepartmentContactComponent{{'}'}}
+    ]
+  {{'}'}},
+];
+
+export const routingComponents = [DepartmentDetailComponent,DepartmentOverviewComponent,DepartmentContactComponent];
+</pre></code>
+>Into department-detail.component.ts <br> 
+<code><pre>
+@Component( {{'{'}}
+  selector: 'app-department-detail',
+  template: ''
+  {{'<'}}p{{'>'}}
+    {{'<'}}button (click)="showOverview()"{{'>'}}Overview{{'<'}}/button{{'>'}}
+    {{'<'}}button (click)="showContact()"{{'>'}}Contact{{'<'}}/button{{'>'}} {{'}'}}
+  {{'<'}}/p{{'>'}}
+  {{'<'}}router-outlet{{'>'}}{{'<'}}/router-outlet{{'>'}}',
+  styles: []
+{{'}'}})
+showOverview(){{'{'}}
+  this.router.navigate( ['overview'],{{'{'}}relativeTo: this.route{{'}'}});
+{{'}'}}
+showContact(){{'{'}}
+  this.router.navigate( ['contact'],{{'{'}}relativeTo: this.route{{'}'}});
+{{'}'}}
+</pre></code>

@@ -1,0 +1,92 @@
+<h2>Instalar Angular CLI</h2>
+
+    >npm install -g @angular/cli  <br>
+    >ng new my_app <br>
+    >cd my_app <br>
+    >ng serve <br>
+
+<h4>Modules</h4>
+    User / Admin <br>
+    Root Module / AppModule <br>
+
+    -Components
+
+    -Services
+
+
+<h2>5 - Interpolation</h2>
+Name: {{name}} <br>
+Edad : {{10+15}} <br>
+<h2>JS porpertyes </h2>
+Name length : {{name.length}} <br>
+{{"Welcome "+name}}
+<h2>JS Methods  </h2>
+name.toUpperCase :  {{name.toUpperCase()}} <br> 
+<h2>Component Methods </h2>
+<code>  greetName() 
+  <br>return "Welcome "+this.name <br>
+</code>
+<br>
+{{greetName()}}
+<br>
+<h2>Global Variables</h2>
+ window.location.href  : {{siteUrl}} <br>
+
+<h2>6 - Property Binding</h2>
+
+<h3>Attribute vs Property</h3>
+Attributes and Properties are not the same <br>
+Attribute - HTML <br>
+Properties - DOM (Document Object Model) <br>
+Attributes initialize DOM properties and then they are done. Attribute values cannot change once they are initialized. <br>
+Property values however can change  <br>
+
+<input [id]="myId" type="text" value="Lalo">
+<input id="{{myId}}" type="text" value="Lalo">
+
+<h2>7- Class binding</h2>
+<h4 class="{{successClass}}">Text Success</h4>
+<h4 [class]="successClass">Text Success</h4>
+<h4 [class.text-danger]="!hasError">Text Danger</h4>
+<h4 [ngClass]="messageClasses">Text Prueba</h4>
+
+<h2>8 - Style Binding</h2>
+
+<h4 [style.color]="'orange'">Text Style</h4>
+<h4 [style.color]="hasError ? 'red' : 'green' ">Text Style Condition</h4>
+<h4 [style.color]="highlightColor">Style Binding 2</h4>
+<h4 [ngStyle]="titleStyle" >Style Binding 3</h4>
+
+<h2>9 - Event Binding</h2>
+<button (click)="onClick($event)">Greet</button>
+<button (click)="greeting = 'Welcome !!!' ">Greet</button>
+{{greeting}} <br>
+
+<h2>10 - Template Reference Variables</h2>
+<h4>Welcome {{name}}</h4>
+<input #myInput type="text">
+<button (click)=" logMessage(myInput.value)" >Log</button>
+
+<h2>11 - Two Way Binding</h2>
+Agregar el Modulo Forms en app.module.ts <br>
+<code>
+  import {{ '{' }}FormsModule{{ '}' }} from '@angular/forms'; <br>
+
+@NgModule( {{ '{' }} <br>
+  imports: [ <br>
+    BrowserModule, <br>
+    FormsModule <br>
+  ] <br>
+{{ '}' }})
+</code>
+<br> <br>
+<input [(ngModel)]=name type="text">{{name}}
+
+<h2>12 - ngIf Directive</h2>
+<h3>Structual Directives</h3>
+Add or remove HTML elements <br>
+<ul>  
+  <li>ngIf</li>
+  <li>ngSwitch</li>
+  <li>ngFor</li>
+</ul>
